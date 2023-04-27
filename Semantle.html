@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<!-- saved from url=(0021)https://semantle.com/ -->
+<html lang="en" class=" xjjtwdov idc0_347"><link type="text/css" rel="stylesheet" id="dark-mode-custom-link"><link type="text/css" rel="stylesheet" id="dark-mode-general-link"><style lang="en" type="text/css" id="dark-mode-custom-style"></style><style lang="en" type="text/css" id="dark-mode-native-style"></style><style lang="en" type="text/css" id="dark-mode-native-sheet"></style><!-- on MLP server --><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+   
+   
+    <meta property="og:site_name" content="Semantle">
+    <meta property="og:url" content="https://semantle.com/">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">  
+    <meta property="og:image" content="/assets/images/semantle-og.png">
+
+    <link rel="stylesheet" href="./Semantle_files/styles.css">
+    <link rel="stylesheet" href="./Semantle_files/all.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://semantle.com/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://semantle.com/assets/favicon-16x16.png">
+    <link rel="manifest" href="https://semantle.com/assets/site.webmanifest">
+    
+    <script type="text/javascript" async="" src="./Semantle_files/recaptcha__en.js" crossorigin="anonymous" integrity="sha384-yVUHtIpds8Tl/RiQE0yJa9zbdbWLiDChDOh21M+FbehU63XhxluEyLXxS9zMIE4r"></script><script src="./Semantle_files/tag" async=""></script>
+    <!--
+
+    Copyright (c) 2022, David Turner <novalis@novalis.org>
+
+     This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+-->
+<script src="./Semantle_files/toast.js"></script>
+  <style>
+    
+#vanilla-toast-container {
+    text-align: center;
+    top: 50%;
+    transform: translate(0,-50%);
+    left: 0px;
+    right: 0px;
+    z-index:10000;
+    position: fixed;
+  }
+  
+  #vanilla-toast {
+    display: none;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 30px;
+  
+    background: rgba(0, 0, 0, 0.9);
+    color: #ffffff;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+  }
+  
+  #vanilla-toast-text {
+    display: inline;
+  }
+  
+  #vanilla-toast-close-button {
+    display: none;
+    margin-left: 15px;
+    font-size: 15px;
+  }
+  
+  #vanilla-toast.success {
+    background: rgba(92, 184, 92, 0.96);
+  }
+  
+  #vanilla-toast.info {
+    background: rgba(91, 192, 222, 0.96);
+  }
+  
+  #vanilla-toast.warning {
+    background: rgba(236, 151, 31, 0.96);
+  }
+  
+  #vanilla-toast.error {
+    background: rgba(201, 48, 44, 0.96);
+  }
+  </style>
+  <script>
+    window.RewardAdsEnabled = false;
+    window.RewardAdsReady = false;
+
+    window.googletag = window.googletag || {cmd: []};
+
+    const RewardAds = {
+
+        opts: {
+            domain:'semantle.com',
+            unit_id: '/22152718,15567680/ca-games-pub-4276969157128104-tag/semantle_rewardedads_web',
+        },
+ 
+        handler: new EventTarget(),
+
+        on(t,cbk=null) {
+            this.handler.removeEventListener(t,cbk);
+            this.handler.addEventListener(t,cbk);
+            return(this);
+        },
+
+        setup() {
+            let self = this;
+            console.log("Setting up GPT Listeners");
+            return new Promise(function(resolve, reject) {
+
+                console.log("Loading GPT script");
+                window.googletag.cmd.push(() => {
+                    window.googletag.pubads().set("page_url", self.opts.domain);
+                    self.slot = window.googletag.defineOutOfPageSlot(
+                    self.opts.unit_id,
+                    window.googletag.enums.OutOfPageFormat.REWARDED
+                ).addService(window.googletag.pubads())
+                self.slot.setForceSafeFrame(true);
+                window.googletag.enableServices();
+                    window.googletag.pubads().addEventListener('slotOnload', function(e) {
+                        console.log('Slot Loaded');
+                        self.handler.dispatchEvent(new CustomEvent('load',{ detail:{ event:e }}))
+
+                    });
+                    window.googletag.pubads().addEventListener('rewardedSlotReady', function(e) {
+                        console.log('Slot Ready');
+                        self.slots.push(e.slot);
+                        self.event = e;
+                        self.handler.dispatchEvent(new CustomEvent('ready',{ detail:{ event:e }}))
+                        window.RewardAdsReady = true;
+                    });
+                    window.googletag.pubads().addEventListener('rewardedSlotClosed', function(e) {
+                        console.log('Slot Closed');       
+                        if (self.rewardgranted) {
+                            if (self.grantedResolve !== null) {
+                                self.grantedResolve(e);
+                            }          
+                            self.rewardgranted = false;                            
+                            //self.handler.dispatchEvent(new CustomEvent('reward_granted',{ detail:{ event:e }}))
+                        } else {                            
+                            if (self.grantedReject !== null) {
+                                self.grantedReject(e);
+                            } 
+                            //self.handler.dispatchEvent(new CustomEvent('reward_not_granted',{ detail:{ event:e }}))
+                        }
+                        setTimeout(function() {
+                          self.preload();
+                        },500);                        
+                        self.handler.dispatchEvent(new CustomEvent('closed',{ detail:{ event:e }}))
+                    });
+                    window.googletag.pubads().addEventListener('rewardedSlotGranted', function(e) {
+                        console.log('Slot Granted');                        
+                        self.rewardgranted = true;
+                        self.handler.dispatchEvent(new CustomEvent('granted',{ detail:{ event:e }}))
+                    });
+
+                    window.googletag.display(self.slot);
+                });
+                resolve(self);
+            });
+        },
+
+        event:null,
+        slot: null,
+
+        slots: [],
+
+        config() {
+            let self = this;
+            console.log("Configuring Slot");
+            window.googletag.cmd.push(() => {
+                    window.googletag.pubads().set("page_url", self.opts.domain);
+                    self.slot = window.googletag.defineOutOfPageSlot(
+                    self.opts.unit_id,
+                    window.googletag.enums.OutOfPageFormat.REWARDED
+                ).addService(window.googletag.pubads());
+                self.slot.setForceSafeFrame(true);
+            });
+            window.googletag.display(self.slot);
+            window.googletag.pubads().refresh();
+        },
+
+        preload() {
+            this.event = null;
+            window.RewardAdsReady = false;
+            this.reset();
+            this.destroy();
+            this.config();
+            return(this);
+        },
+
+        destroy() {
+            console.log('Destroying Slots');
+            let self = this;
+            if (self.slots.length > 0) {
+                window.googletag.cmd.push(function () {
+                    console.log('Destroying slots',self.slots);
+                    window.googletag.destroySlots(self.slots)
+                        ? console.log("destroyed rewarded ad slots")
+                        : console.log("failed to destroy rewarded ad slots");
+
+                    self.slots = [];
+                });
+            }
+        },
+
+        reset() {
+            console.log("reset called");
+            this.slot = null;            
+            this.grantedResolve = null;
+            this.grantedReject = null;
+        },
+
+        grantedResolve:null,
+        grantedReject:null,
+
+        show(cbk=null) {
+            let self = this;
+            this.rewardgranted = false;
+            if (this.event) this.event.makeRewardedVisible();
+            return(new Promise(function(resolve, reject) {
+                self.grantedResolve = resolve;
+                self.grantedReject = reject;
+            }));
+        },
+
+        init(unit_id,cbk=null) {
+
+            let self = this;
+
+            return(self.setup().then(function(gself) {
+                if (cbk) { cbk(gself) }
+                return(gself);
+            }));
+        }
+    }
+      
+    RewardAds.init("",function() {          
+        window.RewardAdsEnabled = true;
+    }).then((r) => {
+        window.RewardAdsEnabled = true;
+        console.log('Reward Ads Initialized');
+    }).catch((e) => {    
+        console.error(e);
+        window.RewardAdsEnabled = false;
+    });
+  </script>  
+<script data-cfasync="false" async="" src="./Semantle_files/loader.js" type="text/javascript"></script>
+<script>
+  if (!navigator.share) {
+  navigator.share=navigator.share||function(){if(navigator.share)return navigator.share;let a=navigator.userAgent.match(/Android/i),b=navigator.userAgent.match(/iPhone|iPad|iPod/i),c=!(b||a),d={whatsapp:(a)=>(c?'https://api.whatsapp.com/send?text=':'whatsapp://send?text=')+a,telegram:(a)=>(c?'https://telegram.me/share/msg?url='+location.host+'&text=':'tg://msg?text=')+a,facebook:(a,b,d)=>b?(c?'https://www.facebook.com/dialog/share?app_id='+b+'&display=popup&href='+d+'&redirect_uri='+encodeURIComponent(location.href)+'&quote=':'fb-messenger://share/?message=')+a:'',email:(a,b)=>'mailto:?subject='+b+'&body='+a,sms:(a)=>'sms:?body='+a};const e=new class{_init(){if(this._initialized)return Promise.resolve();this._initialized=!0;const a=Promise.resolve(`<style>.web-share{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",arial,sans-serif;font-weight:400;font-size:13px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}.web-share-title{font-size:16px;font-weight:400;letter-spacing:.12em;opacity:.7}.web-share{position:fixed;top:-10px;left:0;right:0;bottom:0;background:rgba(0,0,0,0);transition:background .4s;padding:8px;flex-direction:column;justify-content:flex-end;z-index:100000;display:none}.web-share-container{max-width:490px;width:100%;box-sizing:border-box;margin:0 auto 8px;background:#f8f8f8;border-radius:12px;box-shadow:rgba(0,0,0,.5) 0 2px 4px;padding:16px 23px;text-align:left;color:#000;transform:translateY(10vh);opacity:0;transition:transform .4s,opacity .4s}.web-share-container.web-share-cancel{color:#0076ff;font-size:16px;text-align:center;cursor:pointer}.web-share-item{margin:16px 8px;display:inline-block;text-decoration:none!important;color:#000!important;cursor:pointer;width:64px}.web-share-item [class^=web-share-icon-]{background-color:#fff;border-radius:12px;padding:12px;color:#000;font-size:32px;width:32px;height:32px;background-position:center;background-repeat:no-repeat;margin:0 auto}.web-share-item[href=""]{display:none}.web-share-item-desc{text-align:center;margin-top:4px}.web-share.desktop .web-share-sms{display:none}.web-share-icon-whatsapp{background-image:url('data:image/svg+xml,<svg width="24" height="25" viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg"><path d="M20.504 3.504C18.246 1.246 15.246 0 12.05 0 5.466 0 .103 5.36.103 11.945c-.004 2.106.546 4.16 1.593 5.973L0 24.108l6.336-1.663c1.742.953 3.71 1.453 5.71 1.457h.005c6.587 0 11.946-5.36 11.95-11.95 0-3.19-1.242-6.19-3.496-8.448zm-8.453 18.38h-.003c-1.78 0-3.53-.482-5.055-1.384l-.363-.215-3.763.985 1.004-3.665-.233-.375c-.996-1.582-1.52-3.41-1.52-5.285 0-5.472 4.457-9.925 9.938-9.925 2.652 0 5.144 1.035 7.02 2.91 1.874 1.88 2.905 4.37 2.905 7.023 0 5.477-4.457 9.93-9.93 9.93zm5.446-7.44c-.297-.147-1.766-.87-2.04-.967-.272-.102-.472-.15-.67.148-.2.3-.77.973-.946 1.172-.172.195-.348.223-.645.074-.3-.147-1.26-.464-2.402-1.483-.887-.79-1.488-1.77-1.66-2.067-.176-.3-.02-.46.13-.61.135-.132.3-.347.448-.523.15-.17.2-.296.302-.496.097-.198.047-.374-.028-.522-.074-.148-.67-1.62-.92-2.22-.244-.58-.49-.5-.673-.51-.17-.008-.37-.008-.57-.008-.2 0-.523.074-.797.375-.273.297-1.043 1.02-1.043 2.488 0 1.47 1.07 2.89 1.22 3.09.148.195 2.105 3.21 5.1 4.504.712.308 1.266.492 1.7.63.715.225 1.367.194 1.883.12.574-.086 1.765-.723 2.015-1.422.247-.695.247-1.293.172-1.418-.074-.125-.273-.2-.574-.352z" fill="black" fill-rule="evenodd"/></svg>')}.web-share-icon-telegram{background-image:url('data:image/svg+xml,<svg width="26" height="23" viewBox="0 0 26 23" xmlns="http://www.w3.org/2000/svg"><path d="M24.075.002c-.336.016-.652.112-.933.22h-.004c-.285.11-1.64.673-3.7 1.523l-7.385 3.063C6.755 7.005 1.547 9.168 1.547 9.168l.063-.023s-.36.115-.735.37c-.19.122-.402.292-.586.557-.185.266-.333.674-.28 1.093.09.712.56 1.14.896 1.374.34.237.664.35.664.35h.008l4.884 1.62c.22.692 1.49 4.8 1.794 5.748.18.565.355.92.574 1.19.105.137.23.253.38.345.057.035.12.062.182.085.02.01.04.015.063.02l-.05-.012c.015.003.027.015.038.02.04.01.067.014.118.022.774.23 1.395-.243 1.395-.243l.036-.027 2.884-2.585 4.833 3.65.11.048c1.008.435 2.027.193 2.566-.234.544-.43.755-.98.755-.98l.035-.09 3.735-18.843c.105-.466.133-.9.016-1.324-.118-.424-.42-.82-.782-1.032-.367-.216-.73-.28-1.067-.266zm-.1 2.02c-.005.062.007.054-.02.173v.012l-3.7 18.647c-.016.027-.044.085-.118.143-.078.06-.14.1-.465-.027l-5.91-4.464-3.572 3.205.75-4.716 9.658-8.866c.4-.365.266-.442.266-.442.027-.447-.602-.13-.602-.13l-12.178 7.43-.004-.02-5.838-1.936v-.003c-.003 0-.01-.004-.015-.004.004 0 .03-.012.03-.012l.032-.014.03-.012 10.51-4.36c2.654-1.1 5.326-2.208 7.38-3.062 2.056-.85 3.576-1.474 3.662-1.51.082-.03.043-.03.102-.03z" fill-rule="nonzero" fill="black"/></svg>')}.web-share-icon-facebook{background-image:url('data:image/svg+xml,<svg width="24" height="25" viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.41 0 0 5.137 0 11.5c0 3.39 1.57 6.402 4 8.5v4.625l4.438-2.22c1.128.34 2.308.595 3.562.595 6.59 0 12-5.137 12-11.5S18.59 0 12 0zm0 2c5.56 0 10 4.266 10 9.5S17.56 21 12 21c-1.195 0-2.336-.227-3.406-.594l-.406-.125L6 21.376v-2.25l-.375-.313C3.405 17.063 2 14.442 2 11.5 2 6.266 6.44 2 12 2zm-1.125 6.344l-6.03 6.375 5.405-3 2.875 3.092 5.97-6.468-5.282 2.97-2.938-2.97z" fill-rule="nonzero" fill="black"/></svg>')}.web-share-icon-email{background-image:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="black" height="32" viewBox="0 0 24 24" width="32"><path d="M0 0h24v24H0z" fill="none"/><path d="M 20,4 4,4 C 2.9,4 2.01,4.9 2.01,6 L 2,18 c 0,1.1 0.9,2 2,2 l 16,0 c 1.1,0 2,-0.9 2,-2 L 22,6 C 22,4.9 21.1,4 20,4 z m 0.508475,14.508475 -17.0169495,0 0,-10.7118648 L 12,12.79661 20.508475,7.7966102 z M 11.694915,11 3.4915255,5.4915255 l 17.0169495,0 z"/></svg>')}.web-share-icon-sms{background-image:url('data:image/svg+xml,<svg fill="black" height="36" viewBox="0 0 24 24" width="36" xmlns="http://www.w3.org/2000/svg"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 11H7V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2z"/><path d="M0 0h24v24H0z" fill="none"/></svg>')}.web-share-icon-copy{background-image:url('data:image/svg+xml,<svg width="24" height="28" viewBox="0 0 24 28" xmlns="http://www.w3.org/2000/svg"><path d="M13.867 0c-.56 0-1.178.006-1.864.006H7.64c-1.633 0-2.873-.003-3.9.103-1.025.106-1.926.336-2.592.946-.665.61-.916 1.437-1.03 2.377C0 4.373.007 5.51.007 7.005v10.019c0 2.547-.12 4.066.642 5.337.38.636 1.065 1.1 1.817 1.324.58.173 1.24.238 1.977.278.014.2.015.432.038.615.116.94.367 1.766 1.033 2.376.666.61 1.567.84 2.592.945 1.026.106 2.265.102 3.896.102h4.363c1.633 0 2.874.003 3.9-.104 1.026-.106 1.927-.336 2.592-.947.666-.61.916-1.437 1.03-2.377.116-.94.112-2.076.112-3.572v-9.996c0-1.498.003-2.635-.113-3.576-.116-.94-.367-1.766-1.033-2.376-.666-.61-1.567-.84-2.592-.945-.206-.022-.466-.022-.69-.036-.046-.706-.122-1.332-.33-1.885-.256-.675-.78-1.282-1.47-1.615-1.036-.5-2.22-.567-3.905-.57zM7.64 2.006h4.363c2.74 0 4.282.107 4.752.333.236.113.3.173.424.5.09.236.15.66.197 1.17-.34 0-.632-.005-1.01-.005h-4.364c-1.633 0-2.874-.003-3.9.104-1.026.105-1.927.335-2.592.946-.665.61-.915 1.436-1.03 2.376-.115.94-.11 2.076-.11 3.572v9.998c0 .356.004.63.005.95-.53-.04-.976-.093-1.235-.17-.38-.112-.452-.178-.577-.386-.25-.417-.375-1.827-.375-4.372v-.01V7.005c0-1.495.007-2.604.098-3.35.09-.745.25-1.045.405-1.186.155-.143.482-.29 1.296-.374.813-.085 2.022-.09 3.655-.09zm4.363 4h4.363c1.63 0 2.84.005 3.653.09.812.082 1.14.228 1.294.37.154.14.315.44.407 1.187.092.745.1 1.854.1 3.35v9.998c0 1.496-.008 2.605-.1 3.35-.09.746-.25 1.046-.404 1.188-.154.14-.482.288-1.295.373-.812.085-2.022.09-3.654.09h-4.363c-1.63 0-2.84-.006-3.653-.09-.813-.083-1.14-.23-1.295-.37-.154-.142-.315-.442-.407-1.188-.092-.745-.098-1.854-.098-3.35v-9.998c0-1.495.007-2.604.098-3.35.092-.745.25-1.045.405-1.187.154-.14.482-.288 1.295-.372.813-.085 2.023-.09 3.655-.09z" fill="black" fill-rule="evenodd"/></svg>')}</style>
+<div class="web-share" style="display: none"><div class="web-share-container web-share-grid"><div class="web-share-title">SHARE VIA</div><a class="web-share-item web-share-whatsapp" data-action="share/whatsapp/share" target="_blank"><div class="web-share-icon-whatsapp"></div><div class="web-share-item-desc">Whatsapp</div></a><a class="web-share-item web-share-facebook"><div class="web-share-icon-facebook"></div><div class="web-share-item-desc">Facebook</div></a><a class="web-share-item web-share-telegram" target="_blank"><div class="web-share-icon-telegram"></div><div class="web-share-item-desc">Telegram</div></a><a class="web-share-item web-share-email"><div class="web-share-icon-email"></div><div class="web-share-item-desc">Email</div></a><a class="web-share-item web-share-sms"><div class="web-share-icon-sms"></div><div class="web-share-item-desc">SMS</div></a><a class="web-share-item web-share-copy"><div class="web-share-icon-copy"></div><div class="web-share-item-desc">Copy</div></a></div><div class="web-share-container web-share-cancel">Cancel</div></div>`);return a.then((a)=>{const b=document.createElement('div');b.innerHTML=a,this.$root=b.querySelector('.web-share'),this.$whatsapp=b.querySelector('.web-share-whatsapp'),this.$facebook=b.querySelector('.web-share-facebook'),this.$telegram=b.querySelector('.web-share-telegram'),this.$email=b.querySelector('.web-share-email'),this.$sms=b.querySelector('.web-share-sms'),this.$copy=b.querySelector('.web-share-copy'),this.$copy.onclick=()=>shareCopy(),this.$root.onclick=()=>this._hide(),this.$root.classList.toggle('desktop',c),document.body.appendChild(b)})}_setPayload(a){let b=a.text+' '+a.url,c=a.title,e=a.facebookId||'158651941570418';this.url=a.url,b=encodeURIComponent(b),c=encodeURIComponent(c),this.$whatsapp.href=d.whatsapp(b),this.$facebook.href=d.facebook(b,e,a.url),this.$telegram.href=d.telegram(b),this.$email.href=d.email(b,c),this.$sms.href=d.sms(b)}_copy(){const a=document.createElement('span');a.textContent=this.url,a.style.whiteSpace='pre',a.style.position='absolute',a.style.left='-9999px',a.style.top='-9999px';const b=window,c=b.getSelection();b.document.body.appendChild(a);const d=b.document.createRange();c.removeAllRanges(),d.selectNode(a),c.addRange(d);let e=!1;try{e=b.document.execCommand('copy')}catch(a){}return c.removeAllRanges(),a.remove(),e}show(a){return this._init().then(()=>{clearTimeout(this._hideTimer),this._setPayload(a),this.$root.style.display='flex',this.$root.offsetWidth,this.$root.style.background='rgba(0,0,0,.4)',document.querySelectorAll('.web-share-container').forEach((a)=>{a.style.transform='translateY(0)',a.style.opacity=1})})}_hide(){this.$root.style.background=null,document.querySelectorAll('.web-share-container').forEach((a)=>{a.style.transform=null,a.style.opacity=null}),this._hideTimer=setTimeout(()=>this.$root.style.display=null,400)}};return(a)=>e.show(a)}();
+  }
+  window.mobileCheck = function() {
+    let check = false;
+    (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) check = true;})(navigator.userAgent||navigator.vendor||window.opera);
+    return check;
+  };
+
+  const semantleShare = {
+
+    async share(text="",title="Semantle") {
+        
+        navigator.share({
+            title: title,
+            text: text,  
+        })
+        .then( function(d) {
+            
+        })
+        .catch( function(err) {  
+            
+        });  
+ 
+    }, 
+ 
+  }
+</script>
+  
+<style>
+  
+  @media screen and (max-width:375px) { body { font-size:11px; }  }  /* MJD: Amendment 25 May 2022 */
+
+  img { max-width:100%;max-height:100%;}
+  .head-logo { filter: none;}
+  .dark .head-logo { filter: invert(100%);max-width:100%;max-height:100%; }
+  .page-menu { display: flex;width:100%;margin-top:20px;border-top:1px solid #999;padding-top:10px;justify-content: center;align-items: center;} 
+  .page-menu a { margin-right:10px;}
+  .page-menu a:last-child { margin-right:0;}
+#hint-btn,#give-up-btn { width:100px;}
+#hint-btn { margin-right:10px;}
+  #team-collab { border-bottom:1px solid #999;padding-bottom:10px;margin-bottom:10px;}
+  .team-status-message { background:#333  !important;padding:10px !important;color:#fff !important;}
+  .dark .team-status-message { background:#fff  !important;color:#000  !important;}
+  .cls-1 { fill:#000 ;}
+  svg { max-width:100%;max-height:100%;}
+  .dark .cls-1 { fill:#fff !important;}
+</style>
+  
+    <title>Semantle</title>
+    <script src="./Semantle_files/secretWords.js"></script>
+    <script src="./Semantle_files/clipboard.js"></script>
+    <script src="./Semantle_files/british_spellings.js"></script>
+ 
+    <script>
+      window.semantle_game_type = 'daily';
+    </script>
+    <style>
+      h2 { color:#f50 !important; font-size:1.6em !important;}
+    </style>
+
+
+ 
+
+  <script src="chrome-extension://mooikfkahbdckldjjndioackbalphokd/assets/prompt.js"></script><script src="./Semantle_files/api.js"></script></head>
+  <body class="light fontSize0 hide-emojis">
+    <script src="./Semantle_files/confetti.js"></script>
+    <script>
+
+      let darksModeMql = window.matchMedia('(prefers-color-scheme: dark)');
+      let darksMode = false;
+
+      function checkPageColor() {
+          const storagePrefersDarkColorScheme = window.localStorage.getItem("prefersDarkColorScheme");
+          if (storagePrefersDarkColorScheme === 'true' || storagePrefersDarkColorScheme === 'false') {
+            darksMode = storagePrefersDarkColorScheme === 'true';
+          } 
+          document.body.classList[darksMode ? 'add' : 'remove']('dark');   
+          document.body.classList[!darksMode ? 'add' : 'remove']('light');     
+      }
+       
+      checkPageColor();
+
+  </script>  
+  <style>
+      .logo-black { display:block;}
+      .logo-white { display:none; }
+      .dark .logo-white { display:block;}
+      .dark .logo-black { display:none;}  
+  </style>
+
+  <div style="display:flex;max-width:100%;overflow-x:hidden;">
+    <div style="flex-grow:1;" id="page-content">
+          <header style="width:100%;margin-bottom:10px;height:36px;display:flex;justify-content: flex-start;align-items:center;">
+            <h2 style="display:inline-flex;flex-grow:1;height:36px;width:100%;">
+              <a href="https://semantle.com/" style="display:inline-flex;flex-grow:0;height:36px;"> <!-- MJD: Amendment 25 May 2022 -->
+                   
+                
+                      <img class="logo-white" src="./Semantle_files/semantle-logo-white.png" alt="Semantle Word Game">
+                      <img class="logo-black" src="./Semantle_files/semantle-logo.png" alt="Semantle Word Game">              
+                      <style>
+                        .header-suffix { color:#fff;margin-left:10px;}
+                      </style>
+                   
+                    
+              </a>  <!-- MJD: Amendment 25 May 2022 -->
+              <div style="display:inline-block;position:relative;height:36px;line-height:32px;" class="header-suffix">
+                
+              </div>
+            </h2>
+            
+            
+<nav id="menu">
+  <button id="cloud-button" aria-label="Play with Friends">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true" viewBox="0 0 640 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M96.2 200.1C96.07 197.4 96 194.7 96 192C96 103.6 167.6 32 256 32C315.3 32 367 64.25 394.7 112.2C409.9 101.1 428.3 96 448 96C501 96 544 138.1 544 192C544 204.2 541.7 215.8 537.6 226.6C596 238.4 640 290.1 640 352C640 422.7 582.7 480 512 480H144C64.47 480 0 415.5 0 336C0 273.2 40.17 219.8 96.2 200.1z"></path></svg>
+</button><sup id="team-members"></sup>
+  <button id="rules-button" aria-label="Rules">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+    </svg>          
+  </button>
+  <button id="settings-button" aria-label="Settings">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
+    </svg>          
+  </button>
+</nav>
+
+            
+          </header>
+          
+
+        
+        <style>
+          #page-sidebar { width:320px;min-width:320px;display:flex;justify-content:center;align-items:flex-start;max-width:320px;margin-left:25px; }
+            @media screen and (max-width:960px) {
+              #page-sidebar { display:none;}
+            }
+        </style> 
+              
+<div class="daily-workspace"> 
+    <!-- place this script after body so it can reference it -->
+    <script src="./Semantle_files/daily-cloud-semantle.js"></script>
+    <style>
+      .word-cold .guess-emoji { filter:grayscale(100);}
+      .guess-emoji { display:inline-block;margin-left:10px;}
+      .pcont { position:relative;display:inline-flex;justify-content: center;align-items:center; }
+            .pcont .percentile { position:absolute;width:100%;height:100%;display:flex;justify-content: center;align-items: center; }
+  </style>
+    <div class="dialog-underlay" id="rules-underlay">
+      <div class="dialog" id="rules" aria-labelledby="rules-heading" aria-modal="true" role="dialog">
+        <button class="dialog-close" id="rules-close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+    </svg>
+  </button>
+        <div class="dialog-content" id="rules-content">
+          <h3 id="rules-heading">Guess the secret word</h3>
+          <p>
+            Each guess must be a word. Semantle will tell you how semantically
+            similar it thinks your word is to the secret word.  Unlike
+            that other word game, it's not about the spelling; it's
+            about the meaning. The similarity value comes from
+            Word2vec.  The highest possible similarity is 100
+            (indicating that the words are identical and you have
+            won). The lowest in theory is -100, but in practice it's
+            around -34.  By "semantically similar", I mean, roughly
+            "used in the context of similar words, in a database of
+            news articles."
+          </p>
+          <p>
+            Secret words may be any part of speech, but will always be
+            single words.  It's tempting to think only of nouns, since that
+            is how normal semantic word-guessing games work.  Don't get
+            caught in the trap!  Since our Word2vec data set contains some
+            proper nouns, guesses are case-sensitive.  But I removed all but
+            lower-case words from the secret word set, and if your word
+            matches the secret word but for case, you win anyway.  So if you
+            want to know if the word is more like nice
+            or <a href="https://en.wikipedia.org/wiki/Nice">Nice</a>, you
+            can ask about both.
+          </p>
+          <p>
+            The "Getting close" indicator tells you how close you are --if
+            your word is one of the 1,000 nearest normal words to the target
+            word, the rank will be given (1000 is the target word itself).
+            If your word is not one of the nearest 1000, you're "cold". (By
+            "normal" words", I mean non-capitalized words that appears in a
+            very large English word list; there are lots of capitalized,
+            misspelled, or obscure words that might be close but that won't
+            get a ranking.  Those get marked with "????").
+          </p>
+          <p>
+            You will need more than six guesses.  You will probably need
+            dozens of guesses. <b>There's a new word every day</b>, where
+            a day starts at midnight UTC <span id="localtime">or 17:00 your time</span>. <span id="yesterday"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <p id="similarity-story">
+Today is puzzle number <b>453</b>. The nearest word has a similarity of
+<b>68.67</b>, the tenth-nearest has a similarity of
+41.89 and the one thousandth nearest word has a
+similarity of 23.17.
+</p>
+    <style>
+       #twitter-message { background:#e5e5e5;color:#000;}
+      .dark #twitter-message { background:#333;color:#fff;}
+     
+    </style>
+   
+    <div id="error" aria-live="assertive" style="display: none;"></div>
+    <form id="form" autocorrect="off" autocapitalize="none" autocomplete="off">
+      <div id="guess-wrapper">
+        <input placeholder="Guess" autocorrect="off" autocapitalize="none" autocomplete="off" type="text" id="guess">
+        <input type="submit" value="Guess" id="guess-btn">
+      </div>
+    </form>
+    <div id="magic"></div>
+    <div id="response" aria-live="assertive"></div>
+    <div style="display:none">
+      <input type="text" id="share">
+    </div>
+    <div id="team-message" style="display:none;"></div>
+    <div id="win-message"></div>
+
+    <table aria-live="polite" id="guesses" role="log"><tbody><tr><th id="chronoOrder">#</th><th id="alphaOrder">Guess</th><th id="similarityOrder">Similarity</th><th>Getting close?</th></tr><tr class="word-close"><td>38</td><td style="color:#c0c" onclick="select(&#39;foresee&#39;, secretVec);">foresee</td><td style="color: rgb(74.53217507474908,0,0)">29.23</td><td class="close"><span class="pcont"><span class="percentile">788/1000</span>&nbsp; <span class="progress-container">
+<span class="progress-bar" style="width:78.8%">&nbsp;</span>
+</span></span><span class="guess-emoji">😎</span></td></tr><tr><td colspan="4"><hr></td></tr><tr class="word-close"><td>36</td><td style="color:#000" onclick="select(&#39;envision&#39;, secretVec);">envision</td><td style="color: rgb(97.72371613984211,0,0)">38.32</td><td class="close"><span class="pcont"><span class="percentile">976/1000</span>&nbsp; <span class="progress-container">
+<span class="progress-bar" style="width:97.6%">&nbsp;</span>
+</span></span><span class="guess-emoji">🔥</span></td></tr><tr class="word-close"><td>27</td><td style="color:#000" onclick="select(&#39;imagine&#39;, secretVec);">imagine</td><td style="color: rgb(71.30991881656327,0,0)">27.96</td><td class="close"><span class="pcont"><span class="percentile">703/1000</span>&nbsp; <span class="progress-container">
+<span class="progress-bar" style="width:70.3%">&nbsp;</span>
+</span></span><span class="guess-emoji">😎</span></td></tr><tr class="word-glass"><td>21</td><td style="color:#000" onclick="select(&#39;think&#39;, secretVec);">think</td><td style="color: rgb(60.900692337697066,0,0)">23.88</td><td class="close"><span class="pcont"><span class="percentile">166/1000</span>&nbsp; <span class="progress-container">
+<span class="progress-bar" style="width:16.6%">&nbsp;</span>
+</span></span><span class="guess-emoji">🤓</span></td></tr><tr class="word-glass"><td>33</td><td style="color:#000" onclick="select(&#39;imagined&#39;, secretVec);">imagined</td><td style="color: rgb(57.2000136968835,0,0)">22.43</td><td class=""><span class="pcont">(tepid)</span><span class="guess-emoji">🤔</span></td></tr><tr class="word-cold"><td>22</td><td style="color:#000" onclick="select(&#39;thought&#39;, secretVec);">thought</td><td style="color: rgb(49.212464886429125,0,0)">19.30</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>24</td><td style="color:#000" onclick="select(&#39;thinking&#39;, secretVec);">thinking</td><td style="color: rgb(48.10395072396215,0,0)">18.86</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>12</td><td style="color:#000" onclick="select(&#39;concept&#39;, secretVec);">concept</td><td style="color: rgb(43.442261232095476,0,0)">17.04</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>1</td><td style="color:#000" onclick="select(&#39;test&#39;, secretVec);">test</td><td style="color: rgb(41.76690603062712,0,0)">16.38</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>18</td><td style="color:#000" onclick="select(&#39;neato&#39;, secretVec);">neato</td><td style="color: rgb(41.708587590876206,0,0)">16.36</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>11</td><td style="color:#000" onclick="select(&#39;idea&#39;, secretVec);">idea</td><td style="color: rgb(40.01585298304879,0,0)">15.69</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>14</td><td style="color:#000" onclick="select(&#39;human&#39;, secretVec);">human</td><td style="color: rgb(38.801037877468225,0,0)">15.22</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>23</td><td style="color:#000" onclick="select(&#39;brain&#39;, secretVec);">brain</td><td style="color: rgb(30.711811885881385,0,0)">12.04</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>34</td><td style="color:#000" onclick="select(&#39;visualize&#39;, secretVec);">visualize</td><td style="color: rgb(29.377338184714823,0,0)">11.52</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>10</td><td style="color:#000" onclick="select(&#39;hypothesis&#39;, secretVec);">hypothesis</td><td style="color: rgb(28.736274020908667,0,0)">11.27</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>37</td><td style="color:#000" onclick="select(&#39;picture&#39;, secretVec);">picture</td><td style="color: rgb(28.66567606002708,0,0)">11.24</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>26</td><td style="color:#000" onclick="select(&#39;wonder&#39;, secretVec);">wonder</td><td style="color: rgb(27.00206532215609,0,0)">10.59</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>35</td><td style="color:#000" onclick="select(&#39;image&#39;, secretVec);">image</td><td style="color: rgb(25.811392169219367,0,0)">10.12</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>32</td><td style="color:#000" onclick="select(&#39;random&#39;, secretVec);">random</td><td style="color: rgb(25.79706342442482,0,0)">10.12</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>17</td><td style="color:#000" onclick="select(&#39;color&#39;, secretVec);">color</td><td style="color: rgb(24.88767633023487,0,0)">9.76</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>8</td><td style="color:#000" onclick="select(&#39;red&#39;, secretVec);">red</td><td style="color: rgb(24.720809373208144,0,0)">9.69</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>7</td><td style="color:#000" onclick="select(&#39;blue&#39;, secretVec);">blue</td><td style="color: rgb(23.291395726854844,0,0)">9.13</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>28</td><td style="color:#000" onclick="select(&#39;imagination&#39;, secretVec);">imagination</td><td style="color: rgb(22.958943622507206,0,0)">9.00</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>4</td><td style="color:#000" onclick="select(&#39;train&#39;, secretVec);">train</td><td style="color: rgb(20.78222277389109,0,0)">8.15</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>6</td><td style="color:#000" onclick="select(&#39;try&#39;, secretVec);">try</td><td style="color: rgb(19.863437885335003,0,0)">7.79</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>29</td><td style="color:#000" onclick="select(&#39;create&#39;, secretVec);">create</td><td style="color: rgb(18.124620761317267,0,0)">7.11</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>30</td><td style="color:#000" onclick="select(&#39;ideate&#39;, secretVec);">ideate</td><td style="color: rgb(17.46965074378155,0,0)">6.85</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>15</td><td style="color:#000" onclick="select(&#39;peoples&#39;, secretVec);">peoples</td><td style="color: rgb(13.442895493335776,0,0)">5.27</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>20</td><td style="color:#000" onclick="select(&#39;conceptualize&#39;, secretVec);">conceptualize</td><td style="color: rgb(12.061202974591575,0,0)">4.73</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>3</td><td style="color:#000" onclick="select(&#39;trial&#39;, secretVec);">trial</td><td style="color: rgb(11.583891984966618,0,0)">4.54</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>2</td><td style="color:#000" onclick="select(&#39;kappa&#39;, secretVec);">kappa</td><td style="color: rgb(9.958222165662669,0,0)">3.91</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>13</td><td style="color:#000" onclick="select(&#39;research&#39;, secretVec);">research</td><td style="color: rgb(8.35517716522768,0,0)">3.28</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>16</td><td style="color:#000" onclick="select(&#39;foreign&#39;, secretVec);">foreign</td><td style="color: rgb(5.464524160434566,0,0)">2.14</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>5</td><td style="color:#000" onclick="select(&#39;exam&#39;, secretVec);">exam</td><td style="color: rgb(4.793284258998645,0,0)">1.88</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>31</td><td style="color:#000" onclick="select(&#39;theorize&#39;, secretVec);">theorize</td><td style="color: rgb(2.064936648981665,0,0)">0.81</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>25</td><td style="color:#000" onclick="select(&#39;ponder&#39;, secretVec);">ponder</td><td style="color: rgb(-1.403399368153878,0,0)">-0.55</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>9</td><td style="color:#000" onclick="select(&#39;school&#39;, secretVec);">school</td><td style="color: rgb(-2.191692627631085,0,0)">-0.86</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr><tr class="word-cold"><td>19</td><td style="color:#000" onclick="select(&#39;bandit&#39;, secretVec);">bandit</td><td style="color: rgb(-2.614132019553383,0,0)">-1.03</td><td class=""><span class="pcont">(cold)</span><span class="guess-emoji">🥶</span></td></tr></tbody></table>
+    
+    <div class="advert"><div id="adngin-mobile_incontent-0"></div><br></div>
+
+      <!-- MJD - Player Names -->
+      <style>
+        .is-team-game #hint-btn { pointer-events:none;opacity:0.4;}
+        .hints-disabled { display:none;}
+        .reward-hint #hint-btn { background-color:#1D9BF0 }
+        #hint-btn i { display:none;margin-right:10px;}
+        .reward-hint #hint-btn i { display:inline-block;}
+        .is-team-game .hints-disabled { display:block;margin:15px 0 10px 0;text-align:center;background:rgb(59, 53, 53);color:#fff;padding:10px;}
+      </style>
+      <div style="display:block;margin-bottom:0px;">
+        <button type="button" id="hint-btn"><i class="fa fa-ad"></i>Hint</button>
+        <input type="button" value="Give up" id="give-up-btn">
+      </div>
+      <p class="hints-disabled">Hints are disabled on team games.</p>
+      <!-- MJD - Player Names -->
+
+    <br>
+  <style>
+  
+    #game-history { margin:10px 0;line-height:1.4em;text-align:center;display:none;padding:10px 15px;border:1px solid #ccc;background:#f5f5f5;}
+    .logged-in #game-history { display:block;}
+    .dark #game-history { padding:10px 15px;border:1px solid #ccc;background:#333;}
+  </style>
+  
+  <div id="game-history">Loading stats...</div> 
+  <p class="games-mobile">Play other Semantle games</p>
+  <nav class="games-mobile">
+  <a href="https://semantle.com/junior" class="btn-normal"><i class="fa fa-baby"></i>&nbsp;&nbsp;Semantle Junior</a>
+  <a href="https://semantle.com/#" class="cloud-button btn-normal" onclick="return(false)"><i class="fa fa-users"></i>&nbsp;&nbsp;With Friends</a>
+</nav>
+  <div style="text-align:center;display:none;padding:10px;" id="twitter-message"></div>
+  
+<footer>
+  <div style="padding-bottom:5px;margin-bottom:10px;border-bottom:1px solid #fff3;font-size:16px;text-align:center;">
+    ❤️&nbsp;&nbsp;<strong>SEMANTLE?</strong> - Try <a href="https://www.thewordfinder.com/word-connection/" target="_blank">Word Connection!</a>
+  </div>
+<h3 id="faq">FAQ</h3>
+
+   
+<button class="accordion"> When does the new word come out?</button>
+<div class="panel" style="display: none;">
+  <p> Midnight UTC <span id="localtime2">or 17:00 your time</span> </p>
+</div>
+
+<!-- MJD: Yesterday Addon -->
+<style>
+  #yesterday2 { transition: all 150ms ease-in-out;user-select: none; /* supported by Chrome and Opera */
+-webkit-user-select: none; /* Safari */
+-khtml-user-select: none; /* Konqueror HTML */
+-moz-user-select: none; /* Firefox */
+-ms-user-select: none;}
+  body .yesterday-word { filter:blur(7px);cursor:pointer;}
+  body.unblur .yesterday-word { filter:none; }
+</style>
+  
+<button class="accordion"> Can I see yesterday's word?</button>
+<div class="panel" style="display: none;">
+  <p> Yes, <span id="yesterday2" onclick="document.body.classList.toggle(&#39;unblur&#39;);"><span class="yesterday-word">"warn"</span>. The words before that were: "coin", "organized", "infant", "sack", "alien", "rack", "treat"</span>. </p>
+</div>
+<!-- MJD: End of Yesterday Addon -->
+   
+
+
+
+<button class="accordion"> How do I save stats across devices? </button>
+<div class="panel">
+  <p>To save your stats, login with Twitter (cloud icon above) using the browser/device you normally use, AND complete a game on this page to start. 
+        
+        </p>
+</div> 
+
+
+
+  <button class="accordion"> Can I play yesterday's game?</button>
+  <div class="panel">
+    <p> Yes, you can now play yesterday's puzzle <a href="https://semantle.com/yesterday">here</a>. </p>
+  </div>
+
+  <button class="accordion"> What words were closest to yesterday's word? </button>
+  <div class="panel">
+    <p> <span id="nearbyYesterday">warned, warning, warns, cautioning, forewarn, beware, warnings, advise, alerting, remind, in descending order of closeness. <a href="https://semantle.com/nearby_1k/d2Fybg==">More?</a></span>
+    </p>
+  </div>
+
+  <button class="accordion" id="capitalized-faq"> Why is the similarity so different from what I was expecting?</button>
+  <div class="panel">
+    <p> I can think of at least four reasons for this. </p>
+    <ol>
+      <li>Your guess, or the target word, is polysemous, and the
+        meaning that is similar is rarely used. This is why "leather"
+        is far from "patent."  Sometimes one usage is simply more
+        popular (among newspaper reporters, which is the corpus):
+        "display" is more often a verb than a noun, and its vector
+        reflects this.</li>
+      <li>You capitalized your word.  SmartKey and some other
+        keyboards stupidly ignore the autocapitalize settings that I
+        have explicitly set in the HTML, and there does not seem to
+        be anything I can do about this.  I added a checkbox to help
+        you avoid this.</li>
+      <li>Your word and the target word belong to different parts of
+        speech.  Sometimes this matters a lot.  Sometimes it matters
+        only a little.</li>
+      <li>By "similarity", we really mean "used in similar contexts".
+        The principle was articulated by John Rupert Firth, who wrote,
+        "[Y]ou shall know a word by the company it keeps."  So, "love"
+        and "hate" may seem like opposites, but they will often score
+        similarly.  The actual opposite of "love" is probably something
+        like "Arizona Diamondbacks", or "carburetor".</li>
+    </ol>
+    <p> The data set is what it is -- it's not perfect, and I can't
+    afford enough computing power (or a big enough corpus) to try to
+    make a better one.  The technique has limitations.  Sometimes,
+    they'll bite you and you'll lose.</p>
+  </div>
+
+  <button class="accordion"> Can I play more than once per day?  Can I play old games? </button>
+  <div class="panel">
+    <p>As far as old games, you can access <a href="https://semantle.com/yesterday">yesterday's</a> game. You can also play Semantle Junior, a daily, easier version of Semantle.  As of May 31, you can access old puzzles at the <a href="https://www.thewordfinder.com/semantle-archives/">Semantle Archives</a> on The Word Finder. That's about it.  We don't offer any other puzzles on Semantle.com. There are three reasons
+    for this:</p>
+      <ol>
+        <li>Mindless imitation of that other word guessing game.</li>
+        <li>A game designer I know found a site that let you play as much of the other game as you want.  He immediately binged, and then got bored, and hasn't tweeted about it since.</li>
+        <li>Another friend of mine said that she considered giving up on one day's Semantle, and then realized it would be another 24 hours before she could try again.  So she persevered and got it.</li>
+      </ol>
+    <p>But you can <a href="https://semantle.com/make">send your friend a custom
+    game</a>.  And maybe your friend will send you one back.  Maybe
+    the word will be flirtatious.  Maybe you will conduct an entire
+    romance over Semantle.  I met my wife
+    through Zendo,
+    so it's not impossible.</p>
+  </div>
+
+  <button class="accordion"> How did you come up with this?</button>
+  <div class="panel">
+    <p>
+      <a href="http://www.topped-with-meat.com/connector/frenchtoast.html">Prior
+      art</a>. I discovered French Toast about 20 years ago, and
+      immediately knew that I had to
+      tell <a href="https://blog.plover.com/">Dominus</a> about it.
+      He replied that in fact he
+      and <a href="https://moonmilk.com/">Ranjit</a> had invented it
+      ten or so years before that, and called it "Plenty Questions".
+      Also, <a href="https://www.datcreativity.com/task">the Divergent
+      Association Task</a> is the opposite of Semantle.
+    </p>
+    <p>
+      But I wasn't thinking of French Toast when I invented this.
+      Instead, I was thinking
+      about <a href="https://www.powerlanguage.co.uk/wordle/">Wordle</a>
+      and <a href="https://worldle.teuteuf.fr/">Worldle</a> and about
+      the dimensionality of data sets.  I considered Filmle, a movie
+      guessing game: You say "The Matrix", it says "Keanu Reeves has a
+      bacon number of 3 where bacon is the lead actor in the target
+      film." (and so on for Carrie-Ann Moss, Laurence Fishburne, and
+      Hugo Weaving for actors at corresponding billings).  But I don't
+      care about movies.  Too bad,
+      because <a href="https://www.imdb.com/interfaces/">IMDB</a>
+      actually has exactly the data that you would need to implement
+      it in a really easy form.  Then I remembered word2vec, and here
+      we are.
+    </p>
+  </div>
+
+  <button class="accordion"> How does this work? </button>
+  <div class="panel">
+    <p> <a href="https://towardsdatascience.com/word2vec-explained-49c52b4ccb71">Here's an article on word2vec, the underlying technology</a>.
+    </p>
+  </div>
+
+  <button class="accordion"> What data set did you use? </button>
+  <div class="panel">
+    <p> <tt>GoogleNews-vectors-negative300.bin</tt> from late 2021</p>
+  </div>
+
+
+
+  <button class="accordion"> What does ???? mean? </button>
+  <div class="panel">
+    Unusual word found! This word is not in the list of "normal"
+    words that we use for the top-1000 list, but it is still
+    similar! (Is it maybe capitalized?)
+  </div>
+
+
+
+  <button class="accordion"> What about the words "and" or "of"?</button>
+  <div class="panel">
+    <p> No clue why the data set doesn't include them.  Perhaps
+    they were just warping the scores of everything else, since they
+    are used in so many different contexts?</p>
+  </div>
+  <button class="accordion"> URL change? </button>
+  <div class="panel">
+    <p> Yes, Semantle is moving to https://semantle.com.  If you go
+      to <a href="https://semantle.novalis.org/">the old site</a>,
+      you should get redirected to the new site.  This will only
+      happen the first time you visit on a given UTC day (so we
+      don't have to worry about transferring a day's guesses over).
+      Hopefully, your stats and preferences should also transfer
+      over.  If you don't see your Novalis.org stats, please use this button below to migrate older stats over from novalis.org.
+      </p><form action="https://semantle.novalis.org/?migrate">
+        <input type="submit" value="Save Stats">
+        
+    </form>
+    <p></p>
+  </div>
+  <button class="accordion"> Who owns Semantle? </button>
+  <div class="panel">
+    <p> Semantle was created by David Turner, and is now part of <a href="https://www.thewordfinder.com/">The Word Finder</a>. 
+     The Word Finder has its own word games and even solvers including an <a href="https://www.thewordfinder.com/anagram-solver/">anagram solver</a>
+   and a <a href="https://www.thewordfinder.com/wordle-solver/">Wordle Solver.</a>  </p>
+  </div>
+
+  <button class="accordion"> What about UK spelling?</button>
+  <div class="panel">
+    <p> The data seems to be normalized to US spelling.  Semantle
+    tries to automatically Americanize your spelling (in the cases
+    where only the American version is in the data set). Of course,
+    they probably couldn't normalize some words, like 'biscuit',
+    'lift', or 'pants', so for those you're on your own.</p>
+  </div>
+
+  <button class="accordion"> Can I sort my guesses chronologically?</button>
+  <div class="panel">
+    <p> Yes: click on the "#" column header.  Click it again to go
+    reverse-chronological.  It will revert to similarity order when
+    you enter a guess (or when you click the "Similarity" column
+    header).
+    </p>
+  </div>
+
+  <button class="accordion"> Why do the nearby word ranks go up instead of down? </button>
+  <div class="panel">
+    <p> I was caught between a rock and a hard place here: on one
+    hand, ranks are usually descending, but on the other hand, here,
+    the similarities are ascending. I chose what I thought was the
+    least bad option, but I don't think I would have been happy
+    either way. </p>
+  </div>
+
+  <button class="accordion"> How does my performance compare to others?  What is
+    the average number of guesses across all players?</button>
+    <div class="panel">
+      <p> I don't keep statistics on this. But you are welcome to
+      brag on <a rel="nofollow" href="https://twitter.com/SemantleGame">Twitter</a>, or
+      n <a rel="nofollow" href="https://www.reddit.com/r/semantle">the subreddit</a>.
+      A leaderboard (a) is not in the spirit of the moment, and (b)
+      likely to lead to unpleasant behavior.</p>
+    </div>
+
+  <button class="accordion"> Can I play in other languages? </button>
+  <div class="panel">
+    <p> Yes, <a href="https://swemantle.riddle.nu/">Swedish</a>,
+      <a href="https://semantle-he.herokuapp.com/">Hebrew</a>,
+      <a href="http://semantle-es.cgk.cl/">Spanish</a>,
+      <a href="https://contexto.me/">Portuguese</a>,
+      <a href="https://cemantix.herokuapp.com/">French</a>,
+      <a href="http://semantlich.johannesgaetjen.de/">German</a> (or <a href="https://semantel.tarphos.de/">a different German one</a>),
+      <a href="https://semantle.ozanalpay.com/">Turkish</a>,
+      <a href="https://kcl.somecrap.ru/semantle.today/">Russian</a>,
+      <a href="https://semantle.be/">Dutch</a>
+      and
+      <a href="https://semantle-ko.newsjel.ly/">Korean</a>
+      .  Credit to enigmatix, author of <a href="https://cemantix.herokuapp.com/">Cemantix</a> for the collaborate and authentication features. </p>
+  </div>
+
+  <button class="accordion"> Can I play with a mob?</button>
+  <div class="panel">
+    <p> As of May 22, you can play on a team using a code to create a room. <a href="https://www.twitch.tv/intarective">And with a mob on Twitch, sometimes.</a></p>
+  </div>
+
+  <button class="accordion"> How do you pick the word of the day? </button>
+  <div class="panel">
+    <p> I grabbed a random list of the "most popular" 5,000 words
+    in English, and removed anything capitalized or with hyphens, and
+    the word2vec stopwords ("and", "if").  Then I shuffled it.</p>
+  </div>
+
+  <button class="accordion"> Hints?</button>
+  <div class="panel">
+    <p> Yes: click the "Hint" button at the bottom of your list of
+      guesses (to the left of "Give up"). You'll get a word that's
+      slightly better than one of your best guesses (unless you've
+      guessed all of the nearest thousand except the target word).</p>
+  </div>
+
+
+
+
+    <div>Made by David Turner.  Word2vec data from Google.</div>
+  </footer>
+
+  <div class="dialog-underlay" id="cloud-underlay">
+    <div class="dialog" id="cloud" aria-labelledby="cloud-heading" aria-modal="true" role="dialog">
+      <button class="dialog-close" id="cloud-close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+    </svg>
+  </button>
+      <style type="text/css">
+
+      </style>
+      <div class="dialog-content" id="cloud-content">
+          <h3 id="rules-heading">Play with Friends</h3>
+          <style>
+
+#cloud-content { text-align:center;}
+            #cloud-content input {
+	font-size: 1.1em;
+	margin-left: .5em;
+	padding: .3em;
+	padding-left: .4em;
+	padding-right: .4em;
+	border-radius: 5px;
+	border-width: 1px;
+}
+.headline { text-align:left;}
+.twitter-button {
+	vertical-align: middle;
+	height: 1.2em;
+	width: 1.2em;
+  margin-left:10px;
+}
+#leave-team,
+#leave-twitter, #twitter-status { text-align:center;}
+
+          </style>
+          <div id="team-collab">
+            <p class="headline">You can play Semantle together as a team! If you are the team creator, click "Get the code" to get a code for your room. Then you can paste the room code into a text or email for others to enter in the "Join a Team" section. Click the "Leave" button to leave the team game.</p>
+            <section> 
+            
+            <!-- MJD - Player Names -->
+            <p class="headline" id="your-name">Enter your name: <input type="text" value="Guest" id="yourname"></p>
+            <!-- MJD - End of Player Names -->
+
+            <p class="headline" id="start-team">Create a team: <input type="submit" value="Get the code" id="start"></p>
+            <p class="headline" id="join-team">Join a team: <input placeholder="Code" autocorrect="off" autocapitalize="none" autocomplete="off" type="text" id="code"><input type="submit" value="Join" id="join"></p>
+            <p class="headline" id="leave-team">You’re in team <b><span class="teamcode" id="team"></span></b> <input type="submit" value="Leave" id="leave"></p>
+            </section>
+            <span id="team-status"></span>
+            
+            <!-- MJD - Player Names -->
+            <script>
+                window.playerName = window.localStorage.getItem('yourname') || "Guest";
+                document.querySelector('#yourname').addEventListener('keyup',function() {
+                    window.localStorage.setItem('yourname',this.value); 
+                    window.playerName = this.value;
+                });
+                document.querySelector('#yourname').value = window.playerName;
+            </script>
+            <!-- MJD - End of Player Names -->
+
+          </div>
+          
+          <div id="twitter-collab">
+            <h3 id="rules-heading">Save stats and play across devices</h3>
+          <p class="headline">You can save your stats across devices by identifying yourself with Twitter. Simply authenticate with Twitter.  No data from your Twitter account other than your ID is used. You can also continue your games (including team games) on another device if you login.</p>
+					<p class="headline" id="join-twitter">Authenticate with Twitter: <button id="signin" style="display:inline-flex;justify-content: center;align-items:center;">
+            <span style="display:inline-block;margin-right:10px;width:24px;height:24px;"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 248 204" style="enable-background:new 0 0 248 204;" xml:space="preserve">
+            <style type="text/css">
+              .st0{fill:#1D9BF0;}
+            </style>
+            <g id="Logo_1_">
+              <path id="white_background" class="st0" d="M221.95,51.29c0.15,2.17,0.15,4.34,0.15,6.53c0,66.73-50.8,143.69-143.69,143.69v-0.04
+                C50.97,201.51,24.1,193.65,1,178.83c3.99,0.48,8,0.72,12.02,0.73c22.74,0.02,44.83-7.61,62.72-21.66
+                c-21.61-0.41-40.56-14.5-47.18-35.07c7.57,1.46,15.37,1.16,22.8-0.87C27.8,117.2,10.85,96.5,10.85,72.46c0-0.22,0-0.43,0-0.64
+                c7.02,3.91,14.88,6.08,22.92,6.32C11.58,63.31,4.74,33.79,18.14,10.71c25.64,31.55,63.47,50.73,104.08,52.76
+                c-4.07-17.54,1.49-35.92,14.61-48.25c20.34-19.12,52.33-18.14,71.45,2.19c11.31-2.23,22.15-6.38,32.07-12.26
+                c-3.77,11.69-11.66,21.62-22.2,27.93c10.01-1.18,19.79-3.86,29-7.95C240.37,35.29,231.83,44.14,221.95,51.29z"></path>
+            </g></svg></span> Sign in</button></p>
+				  	<p class="headline" id="leave-twitter">You’re signed in as  <img class="twitter-button" id="twitter-photo">&nbsp;&nbsp;<b><span id="twitter-name"></span></b><input type="submit" value="Sign out" id="signout"></p>
+					  <span id="twitter-status"></span>
+          </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <!-- MJD: Added this file May 27 2022 -->
+<div class="dialog-underlay" id="settings-underlay">
+    <div class="dialog" id="settings" aria-labelledby="settings-heading" aria-modal="true" role="dialog">
+        <button class="dialog-close" id="settings-close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+    </svg>
+  </button>
+        <div class="dialog-content" id="settings-content">
+            <div>
+                <label for="dark-mode"><input type="checkbox" name="dark-mode" value="dark-mode" id="dark-mode">&nbsp;Dark mode</label>
+            </div> 
+            <div>
+                
+                <label for="hide-emojis"><input type="checkbox" name="hide-emojis" value="hide-emojis" id="hide-emojis">&nbsp;Hide Emojis</label>
+            </div> 
+            <div>
+                <input type="checkbox" name="lower" value="lower" id="lower">
+                <label for="lower">Treat all input as lowercase</label>  <a id="capitalized-link" href="https://semantle.com/#capitalized-faq">(see #2 from the answer to this FAQ)</a>
+            </div>
+            <div>
+                <a href="https://semantle.com/#" onclick="return(false);" id="toggle-font-size" class="font-example"><i class="fa fa-text-size"></i>&nbsp;Toggle Font Size</a>            
+            </div> 
+        </div>
+    </div>
+</div>
+<style>
+
+    body.fontSize0 .font-example,    
+    body.fontSize0 #guesses { font-size:1em;}
+    
+    body.fontSize1 .font-example,
+    body.fontSize1 #guesses { font-size:1.1em;}
+    
+    body.fontSize2 .font-example,
+    body.fontSize2 #guesses { font-size:1.2em;}
+    
+    body.fontSize3 .font-example,
+    body.fontSize3 #guesses { font-size:1.3em;}
+       
+
+
+    #settings-underlay #settings-content > div { margin:0 0 10px 0;}
+
+    #settings-underlay #settings-content > div:last-child { margin:0;}
+    
+    #settings-underlay a { color:currentColor;text-decoration:none;}
+    #capitalized-link { text-decoration: underline;font-size:0.8em;opacity:0.8;}
+</style>
+<script>
+
+    let fontSizes = ['fontSize0','fontSize1','fontSize2','fontSize3'];
+    for(let fs in fontSizes) {
+        document.body.classList.remove(fs);
+    }
+
+    let fontSize = window.localStorage.getItem('font-size') || '"fontSize0"';
+        fontSize = JSON.parse(fontSize);
+        
+        console.log('Current Fontsize',fontSize);
+
+    let fontToggler = document.querySelector('#toggle-font-size');
+        fontToggler.addEventListener('click',function() {
+            let fc = fontSizes.length;
+            let i = fontSizes.indexOf(fontSize);
+                i = i !== -1 ? i : 0;
+                i++;
+                i = i>(fc-1) ? 0 : i;
+
+            document.body.classList.remove(fontSize);
+            fontSize = fontSizes[i];
+            window.localStorage.setItem('font-size',JSON.stringify(fontSize));
+            document.body.classList.add(fontSize);            
+            console.log(fontSize);
+        });    
+    
+    document.body.classList.add(fontSize);
+</script> <!-- MJD: Modified to support easier modifications of settings in future --> <!-- MJD: 27 May 2022 -->
+  
+  
+  <template id="x-icon"></template>
+
+  <style>
+
+  
+  </style>
+
+
+</div>
+    
+          </div> 
+          <div style="flex-grow:0;justify-content:flex-start;align-items:center;flex-direction:column !important" id="page-sidebar">
+            <div style="display:flex;width:320px;position:relative;text-align:center;align-items:center;">
+              <div style="margin:0 auto;max-width:320px;display:inline-block">  
+              
+              
+              
+                <nav> 
+                  <a href="https://semantle.com/#" class="cloud-button btn-normal" onclick="return(false)"><i class="fa-solid fa-user-group"></i>&nbsp;&nbsp;Play With Friends</a>
+                  <a href="https://semantle.com/junior" class="btn-normal"><i class="fa-solid fa-circle-j"></i>&nbsp;&nbsp;Play Semantle Junior</a>
+                  <a href="https://semantle.com/yesterday" class="btn-normal"><i class="fa-solid fa-calendar-day"></i>&nbsp;&nbsp;Play Yesterday's Semantle</a>
+              </nav>  
+              
+
+                <div id="adngin-desktop_sidebar-0" style="margin:0 auto 20px auto;"></div>
+                
+                <div id="adngin-desktop_sidebar2-0" style="margin:0 auto 20px auto;"></div>
+                </div>
+                <br>
+              </div>
+          </div>  
+  </div> 
+    
+    <div class="page-menu">
+      <a href="https://semantle.com/" rel="nofollow">Play</a>
+      <a href="https://semantle.com/privacy" rel="nofollow">Privacy Policy</a>
+      <a href="https://semantle.com/contact" rel="nofollow">Contact</a>
+    </div>
+
+   
+
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async="" src="./Semantle_files/js"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-GM7DJT6S3G');
+      </script>
+
+      <!-- MJD: Amendment 25 May 2022 -->
+      <script>
+
+        var emoji_key = typeof window.semantle_game_type == 'string' && window.semantle_game_type == 'daily' ? 'emojis-daily-disabled' : 'emojis-disabled';
+        var emoji_default = typeof window.semantle_game_type == 'string' && window.semantle_game_type == 'daily' ? 1 : -1;
+
+
+        var emojiDisabled = localStorage.getItem(emoji_key) || emoji_default;                  
+
+        document.querySelector('#hide-emojis').addEventListener('click',function(e) {
+            emojiDisabled = this.checked ? 1 : -1;  
+            localStorage.setItem(emoji_key,this.checked ? 1 : -1);              
+            updateEmojis();
+        });
+
+        const updateEmojis = function() {
+          document.querySelector('#hide-emojis').checked = emojiDisabled == 1;
+
+          document.body.classList.remove('hide-emojis');
+          if (emojiDisabled == 1) {
+            document.body.classList.add('hide-emojis');
+          }
+        }
+ 
+        updateEmojis();
+
+    </script>
+          <!-- MJD: End of Amendment -->
+
+
+    <script>
+
+
+
+          function alphaOnly(event) {
+            var key = event.keyCode;
+            return (((key >= 65 && key <= 90) || key==32 || key == 189 || key<=46 || key === 8));
+          }
+
+        function advKeydown(e) {
+            e = e || window.event;
+            if (e.keyCode === 13) {
+                return(false); 
+            }
+            if (alphaOnly(e)) {                
+                return (true);
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            return(false);
+        }
+
+         let inputGW = document.querySelector('#guess');
+ 
+         if (inputGW){
+          inputGW.addEventListener('keydown',advKeydown);
+         }
+         
+
+
+
+    /* MJD: Yesterday Addon */
+
+    const populateYesterday = function() {
+          
+          if (!secretWords) return;
+          const yesterday = secretWords[yesterdayPuzzleNumber].toLowerCase();
+
+          const y2elem = $('#yesterday2');
+
+          if (y2elem && typeof getSecretWord == 'function') {
+            let pastWeek = [];
+            for (let i = 2; i < 9; i ++) {
+                pastWeek.push(`"${getSecretWord(today - i)}"`);
+            }
+            y2elem.innerHTML = `<span class="yesterday-word">"${yesterday}"</span>. The words before that were: ${pastWeek.join(", ")}`;
+          }
+       }
+
+       window.addEventListener('load',function() {
+           populateYesterday();
+       });
+      
+       
+
+       /* MJD: End of Yesterday Addon */
+
+      </script>
+  
+<div id="fire_app_check_[DEFAULT]" style="display: none;"><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s ease 0s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;"><div class="grecaptcha-logo"><iframe title="reCAPTCHA" src="./Semantle_files/anchor.html" width="256" height="60" role="presentation" name="a-o56el99iuga" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"></iframe></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;" src="./Semantle_files/saved_resource(1).html"></iframe></div></body></html>

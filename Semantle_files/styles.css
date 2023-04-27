@@ -1,0 +1,515 @@
+* {
+    box-sizing: border-box;
+}
+
+body, input, button {
+    font-size: 17px;
+    line-height: 1.59;
+    -webkit-font-smoothing: subpixel-antialiased;
+    font-family:-apple-system-font, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    text-rendering: optimizeLegibility;
+    font-weight:400;
+}
+
+body {
+    margin: 0 auto;
+    max-width: 1160px;    
+    padding: 1em;
+}
+
+body.dialog-open {
+    /*overflow: hidden;*/
+}
+body.cloud-open #cloud-underlay {
+    display: block;
+}
+body.rules-open #rules-underlay {
+    display: block;
+}
+
+body.settings-open #settings-underlay {
+    display: block;
+}
+
+
+
+header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+h2 {
+    margin: 0;
+}
+
+#menu {
+    display: flex;
+    column-gap: .5em;
+}
+
+#menu button,
+.dialog-close {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+#menu button svg {
+    height: 1.5em;
+    width: 1.5em;
+}
+
+.dialog-underlay:after {
+    background: rgba(0,0,0,.5);
+    bottom: 0;
+    content:'';    
+    display:block;
+    left: 0;
+    position: fixed;    
+    right: 0;
+    top: 0;
+    z-index:1;
+}
+.dialog-underlay {
+    background: rgba(0,0,0,.5);
+    bottom: 0;
+    display: none;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index:1000;
+}
+
+.dialog {
+    background: white;
+    left: 2em;
+    margin-bottom: 2em;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 40em;
+    position: absolute;
+    right: 2em;
+    top: 2em;
+    z-index: 1000;
+}
+
+.dialog-close {
+    color: black;
+    font-size: 1.5em;
+    height: 1em;
+    line-height: 1em;
+    right: .5em;
+    position: absolute;
+    top: .5em;
+    width: 1em;
+    z-index: 2;
+}
+
+.dialog-content {
+    padding: 2em;
+    overflow: hidden;
+}
+
+.dialog-content > *:first-child {
+    margin-top: 0;
+}
+
+.dialog-content > *:last-child {
+    margin-bottom: 0;
+}
+
+#error {
+    color: #f00;
+}
+
+#guess-wrapper {
+    display: flex;
+    margin: 20px 0;
+    align-items: center;
+}
+
+#guess-wrapper input,
+#give-up-btn {
+    height: 2.5em;
+    padding: .5em;
+}
+
+#hint-btn {
+    height: 2.5em;
+    padding: .5em;
+}
+
+#guesses {
+    margin-bottom:40px;
+    width:100% !important;
+}
+
+#guess {
+    width: 100%;
+}
+
+th {
+    padding-right: 3em;
+    text-align: start;
+}
+
+th#chronoOrder, th#alphaOrder, th#similarityOrder, input:not([type=text]), button {
+    cursor: pointer;
+}
+
+.gaveup {
+    border: 1px solid black;
+    margin-bottom: 1em;
+    padding: 1em;
+    background-color: #eeeeff;
+}
+
+.gaveup > *:first-child {
+    margin-top: 0;
+}
+
+.close {
+    text-align: left;
+}
+
+.percentile,
+.progress-container,
+.progress-bar {
+    display: inline-block;
+}
+
+.percentile {
+    text-align: right;
+    width: 5em;
+}
+
+.progress-container {
+    background-color: #eeeeee;
+    width: 10em; 
+}
+
+.progress-bar {
+    background-color:#008000;
+}
+
+/*"Unusual word found!  This word is not in the list of \"normal\" words that we use for the top-1000 list, but it is still similar!";*/
+
+.weirdWord {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.weirdWord .tooltiptext {
+ visibility: hidden;
+  width: 20em;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 0.3ex 0;
+  border-radius: 1ex;
+
+  position: absolute;
+  z-index: 10000; /* MJD: Unusual Word Fix */
+}
+
+
+.weirdWord:hover .tooltiptext {
+  visibility: visible;
+}
+
+footer {
+    margin-top: 200px;
+}
+
+@media only screen and (max-width: 640px) {
+    body, input, button {
+        font-size: 14px;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    th {
+        padding-right: .5em;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    
+}
+/* Dark mode */
+body.dark {
+    background: #111;
+    color: #fafafa;
+    color-scheme: dark;
+}
+
+body.light {
+    color-scheme: light;
+}
+
+body.dark a {
+    color: #9af;
+}
+
+body.dark #menu button {
+    color: #fafafa;
+}
+
+body.dark .dialog {
+    background: #333;
+}
+
+body.dark .dialog-close {
+    color: #fafafa;
+}
+
+body.dark .progress-container {
+    background: #333;
+}
+
+body.dark .gaveup {
+    background: #334;
+}
+
+body.dark .panel {
+    background: #334;
+}
+
+body.dark .weirdWord {
+    border-color: #fafafa;
+}
+
+
+/*
+Accordion styling taken from
+https://www.w3schools.com/howto/howto_js_accordion.asp
+*/
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+  margin-top: 3px;
+}
+
+
+body.dark .accordion {
+  background-color: #444;
+  color: #eee;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+  margin-top: 3px;
+}
+
+.active, .accordion:hover {
+  background-color: #ccc;
+}
+
+.panel {
+  padding: 0 18px;
+  background-color: #eeeeff;
+  display: none;
+  overflow: hidden;
+}
+
+.accordion:after {
+  content: '\02795'; /* Unicode character for "plus" sign (+) */
+  font-size: 13px;
+  color: #777;
+  float: right;
+  margin-left: 5px;
+}
+
+.active:after {
+  content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
+#warning {
+    display:none;
+}
+
+#nearest {
+    display:none;
+}
+
+input[type=text] { border:1px solid #999;}
+
+.dark input[type=text] { border:1px solid #666;}
+
+#cloud-content input[type=submit],
+#hint-btn,
+#give-up-btn,
+#guess-btn,
+form > input[type=submit],
+.btn-normal {
+    border:0;
+    background:#e5e5e5;
+    -webkit-appearance: none;
+    border-radius:0 !important;
+    -webkit-border-radius: none;
+    line-height:1em;
+    height:36px;
+    padding:0 15px !important;
+    color:#000  !important;
+    display:inline-flex;justify-content: center;align-items:center;
+} 
+
+#guess-btn { margin-left:8px;}
+.dark #cloud-content input[type=submit],
+.dark #hint-btn,
+.dark #give-up-btn,
+.dark #guess-btn,
+.dark form > input[type=submit],
+.dark .btn-normal {
+    background:#666;
+    color:#fff  !important;
+    border-radius:4px !important;
+}
+
+nav#menu button {
+    width:36px;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    height:36px;
+}
+
+nav#menu button { 
+    color:#000;
+}
+.dark nav#menu button { color:#fff;}
+
+@media screen and (max-width:480px) {
+    nav#menu button {
+        width:22px;
+        display:flex;
+        justify-content: center;
+        align-items:center;
+        height:22px;
+    } 
+    
+    .header-suffix { display:block !important;padding-top:2px;font-size:11px;}
+}
+#page-sidebar { position:relative;max-width:320px;width:320px;overflow:hidden;}
+
+#page-sidebar { width:320px;min-width:320px;display:flex;justify-content:center;align-items:flex-start;max-width:320px;margin-left:25px; }
+@media screen and (max-width:960px) {
+  #page-sidebar { display:none;}
+}
+body {
+    margin:0 auto; 
+    padding:15px 10px !important;
+}
+
+.games-mobile { display:none;}
+
+/* MJD: Added per Praveen's admendments dated 25th May 2022 */
+
+:root {
+    --form-field-height: 42px;
+    --form-field-font-size: 1.2em;
+    --form-field-mobile-font-size: 1.2em;
+}
+
+#form input { height:var(--form-field-height);font-size:var(--form-field-font-size); }
+#form input[type=text] { height:var(--form-field-height);padding-left:15px;padding-right:15px;font-size:var(--form-field-font-size);}
+
+/* MJD: End of Changes */
+
+@media screen and (max-width:1024px) {
+   
+    /* MJD: Added per Praveen's admendments dated 25th May 2022 */
+  
+        #form input { height:var(--form-field-height) !important;font-size:var(--form-field-mobile-font-size); }
+        #form input[type=text] { height:var(--form-field-height);padding-left:15px;padding-right:15px;font-size:var(--form-field-mobile-font-size);}
+
+   /* MJD: End of Changes */
+   
+    body {
+        max-width:calc(100%) !important;
+        margin:0; 
+        padding:15px 10px !important;
+    }
+    p.games-mobile { text-align:center;margin:15px 0 5px 0;border-top:1px solid #99999966;padding-top:15px;display:block;}
+    nav.games-mobile { display:flex;flex-direction:row;margin:10px 0 15px 0;}
+    .advert { margin:15px 0 5px 0;padding:0;display:flex;flex-direction:column;text-align:center;justify-content:center;align-items:center;padding:0;overflow:hidden;max-width:calc(100% - 10px);width:calc(100% - 10px);box-sizing:border-box;}
+    #page-sidebar { display:none !important;}
+}
+#page-sidebar nav { width:100%;}
+.btn-normal { text-decoration:none;}
+
+nav.games-mobile a { display:flex;justify-content:center;align-items:center;width:100% !important;text-decoration:none !important;margin:0 0 0 10px;}
+nav.games-mobile a:first-child { margin-left:0 !important;}
+#page-sidebar nav a { display:flex;justify-content:center;align-items:center;width:100% !important;text-decoration:none !important;margin:0 0 15px 0;}
+
+
+
+#guesses tr td:nth-child(1) { font-size:1.0em} /* Text Size for Guest Size */
+#guesses tr td:nth-child(2) { font-size:1.0em} /* Text Size for Word */
+#guesses tr td:nth-child(3) { font-size:1.0em} /* Text Size for Similarity */
+#guesses tr td:nth-child(4) { font-size:1.0em} /* Text Size for Percentage */
+
+@media screen and (max-width:1024px) { /* Tablet Size for Guess font */
+
+    #guesses tr td:nth-child(1) { font-size:1.0em} /* Text Size for Guest Size */
+    #guesses tr td:nth-child(2) { font-size:1.0em} /* Text Size for Word */
+    #guesses tr td:nth-child(3) { font-size:1.0em} /* Text Size for Similarity */
+    #guesses tr td:nth-child(4) { font-size:1.0em} /* Text Size for Percentage */
+}
+
+.progress-container {  overflow:hidden;}
+
+#guesses tr > *:nth-child(2) small { display:none  !important; } 
+
+@media screen and (max-width:600px) { /* Tablet Size for Guess font */
+    #hint-btn,
+    #give-up-btn { font-size:1.2em;} 
+    
+    #guesses tr > *:nth-child(4) small { display:none !important; } 
+    #guesses tr > *:nth-child(2) small { display:block !important; } 
+    #guesses tr > *:nth-child(1) { font-size:1em} /* Text Size for Guest Size */
+    #guesses tr > *:nth-child(2) { font-size:1em;width:40%;min-width:40%;text-overflow:ellipsis;max-width:40%;white-space: nowrap;} /* Text Size for Word */
+    #guesses tr > *:nth-child(3) { font-size:1em} /* Text Size for Similarity */ 
+    #guesses tr > *:nth-child(4) { font-size:1em;} /* Text Size for Percentage */
+
+    .progress-container {  overflow:hidden;max-width:85px;}
+ 
+}
+
+
+
+.percentile { z-index:2;} 
+ 
+/* MJD: Added per Praveen's admendments dated 25th May 2022 */
+    .hide-emojis .guess-emoji { display:none !important;}
+
+    .light .progress-container { background:#717171;}
+    .light .percentile { text-shadow:none;color:#fff;}
+    .light .progress-bar { background-color:#006600 !important;}
+
+/* MJD: End of Changes */
+
+.dark .progress-bar { background-color:#008000 !important;}
+.dark .percentile { text-shadow:none;} 
+
+#response.gaveup { border:1px solid #ccc;padding:20px; }
+.dark #response.gaveup { border:1px solid #fff; padding:20px;}
+
+#game-history { padding:20px  !important; line-height:1.8em !important;}
+
+#menu button { margin-left:6px;font-size:1.3em; } /* MJD Modified to support more spacing for menu button - MJD: 27 May 2022 */
