@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Model Fight!</title>
+	<script src="https://www.google.com/recaptcha/api.js?render=YOUR_RECAPTCHA_SITE_KEY"></script>
+	<script>
+		function onSubmit(token) {
+			document.getElementById("voted").submit();
+		}
+	</script>
+</head>
+<body>
+	<h1>Model Fight!</h1>
+	<p>Enter your prompt below:</p>
+	<form method="POST" action="#" id="prompt">
+		<label for="prompt_text">Prompt:</label>
+		<textarea id="prompt_text" name="prompt_text"></textarea>
+		<input type="submit" value="Submit">
+	</form>
+	<hr>
+	<h2>Model 1 Output:</h2>
+	<div id="model1_output">
+		<!-- Output from Model 1 will go here -->
+	</div>
+	<button onclick="grecaptcha.execute('YOUR_RECAPTCHA_SITE_KEY', {action: 'model1_vote'}).then(function(token) {document.getElementById('model1_vote').value = token; document.getElementById('voted').submit();});">Vote for Model 1</button>
+	<hr>
+	<h2>Model 2 Output:</h2>
+	<div id="model2_output">
+		<!-- Output from Model 2 will go here -->
+	</div>
+	<button onclick="grecaptcha.execute('YOUR_RECAPTCHA_SITE_KEY', {action: 'model2_vote'}).then(function(token) {document.getElementById('model2_vote').value = token; document.getElementById('voted').submit();});">Vote for Model 2</button>
+	<hr>
+	<h2>Leaderboard:</h2>
+	<ul>
+		<li>Model 1: <strong>3</strong></li>
+		<li>Model 2: <strong>2</strong></li>
+		<li>Model 3: <strong>1</strong></li>
+		<li>Model 4: <strong>1</strong></li>
+		<li>Model 5: <strong>0</strong></li>
+	</ul>
+	<a href="how-to-play.html">How to Play</a>
+	<form method="POST" action="#" id="voted">
+		<input type="hidden" name="model1_vote" id="model1_vote">
+		<input type="hidden" name="model2_vote" id="model2_vote">
+	</form>
+</body>
+</html>

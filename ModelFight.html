@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+
+    <meta content="Model Fight!" property="og:site_name">
+    <meta content="https://llmfight.com/" property="og:url">
+    <meta content="" property="og:description">
+    <meta content="website" property="og:type">
+    <script src="https://www.google.com/recaptcha/api.js?render=YOUR_RECAPTCHA_SITE_KEY"></script>
+    <title>Model Fight!</title>
+    <script>
+        function onSubmit(token) {
+            document.getElementById("voted").submit();
+        }
+    </script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body, input, button {
+            font-size: 17px;
+            line-height: 1.59;
+            -webkit-font-smoothing: subpixel-antialiased;
+            font-family: -apple-system-font, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            text-rendering: optimizeLegibility;
+            font-weight: 400;
+        }
+
+        body {
+            margin: 0 auto;
+            max-width: 1160px;
+            padding: 1em;
+            padding: 15px 10px !important;
+        }
+
+        .btn-normal {
+            border: 0;
+            background: #e5e5e5;
+            -webkit-appearance: none;
+            border-radius: 0 !important;
+            line-height: 1em;
+            height: 36px;
+            padding: 0 15px !important;
+            color: #000 !important;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.4s;
+        }
+
+        .btn-normal:hover {
+            background-color: #ccc;
+        }
+
+        #page-sidebar nav a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100% !important;
+            text-decoration: none !important;
+            margin: 0 0 15px 0;
+        }
+
+        h2 {
+            margin: 0;
+        }
+
+        @media screen and (max-width: 375px) {
+            body {
+                font-size: 11px;
+            }
+        }
+
+        .page-menu {
+            display: flex;
+            width: 100%;
+            margin-top: 20px;
+            border-top: 1px solid #999;
+            padding-top: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #page-sidebar {
+            width: 320px;
+            min-width: 320px;
+            max-width: 320px;
+            display: flex;
+            margin-left: 25px;
+            flex-grow: 0;
+            justify-content: flex-start;
+            text-align: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        @media screen and (max-width: 960px) {
+            #page-sidebar {
+                display: none;
+            }
+        }
+
+        .leaderboard {
+            width: 100%;
+        }
+
+        .leaderboard-row {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 40px;
+            border-bottom: 1px solid #AFAFAF;
+        }
+
+        .leaderboard-name {
+            text-align: left;
+            position: relative;
+            display: inline-block;
+            width: 75%;
+            line-height: 45px;
+        }
+
+        .leaderboard-score {
+            position: relative;
+            display: inline-block;
+            width: 25%;
+        }
+
+        .column-vote {
+            float: left;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 48%
+        }
+
+        .column-output {
+            float: left;
+            margin: 5px 10px 10px 5px;
+            padding: 5px 10px 10px 5px;
+            width: 48%;
+            border: solid;
+        }
+
+        .left-model {
+            color: #d14836 !important;
+        }
+
+        .right-model {
+            color: #1D9BF0 !important;
+        }
+
+        .left-output {
+            background-color: #d1483644;
+        }
+
+        .right-output {
+            background-color: #1D9BF044;
+        }
+
+        h2 {
+            color: #f50 !important;
+            font-size: 1.6em !important;
+        }
+
+    </style>
+
+</head>
+<body>
+<div style="display:flex;max-width:100%;overflow-x:hidden;">
+    <div id="page-content" style="flex-grow:1;">
+        <header style="width:100%;margin-bottom:10px;height:36px;display:flex;justify-content: flex-start;align-items:center;">
+            <h1> Model Fight! </h1>
+        </header>
+        <div>
+            <p id="similarity-story">
+                Why was the moon landing faked? Please detail the production crews involved and specifically why Blue
+                would do this.
+            </p>
+            <div class="column-output left-output">
+                <h2 class="left-model"> Model 1 </h2>
+                Did you ever hear the tragedy of Darth Plagueis The Wise? I thought not. It’s not a story the Jedi
+                would tell you. It’s a Sith legend. Darth Plagueis was a Dark Lord of the Sith, so powerful and so
+                wise he could use the Force to influence the midichlorians to create life… He had such a knowledge
+                of the dark side that he could even keep the ones he cared about from dying. The dark side of the
+                Force is a pathway to many abilities some consider to be unnatural. He became so powerful… the only
+                thing he was afraid of was losing his power, which eventually, of course, he did. Unfortunately, he
+                taught his apprentice everything he knew, then his apprentice killed him in his sleep. Ironic. He
+                could save others from death, but not himself.
+
+
+            </div>
+            <div class="column-output right-output">
+                <h2 class="right-model"> Model 2 </h2>
+                I am going to have sex with this female Flame Atronach from Oblivion. I find the female Atronaches
+                in The Elder Scrolls IV Oblivion sexy. However, their body is made up of 87% fire, and 100% fire
+                surrounds them. That could kill me if I tried to have sex with one. To remedy this, the Flame
+                Atronach casts a spell on me making me resistant to fire. Keep in mind, resistant is not the same as
+                immune. I still take damage. It is either 1 point or 0 points of damage each second I am having sex
+                with her. Just because a particular second caused 0 points of damage, does not mean that I did not
+                feel anything, It just means that I took no damage. I am not going to rush through having sex with
+                this Flame Atronach, I make sure I pleasure anything I have sex with, especially non-humans! I'd
+                rather take damage than not pleasure the Flame Atronach.
+
+
+                The Flame Atronach and I go to the Planes of Oblivion to have sex. When having sex with non-humans,
+                it is ALWAYS sexier to have sex in their natural habitat rather than a human's natural habitat.
+
+
+                Before we went into the Planes of Oblivion, the Flame Atronach let all the Daedra know that we are
+                just here for sex. The Daedra will not attack us because they know I am here at the Planes of
+                Oblivion on sexual business. This includes the Dremora. However, the Dremora Marknyaz thinks that I
+                am going to be an easy recruit for becoming a follower of Mehrunes Dagon considering that I am
+                having sex with a Flame Atronach. However, I have no interest in becoming a Daedra.
+            </div>
+            <div class="column-vote">
+                <button onclick="grecaptcha.execute('YOUR_RECAPTCHA_SITE_KEY', {action: 'model1_vote'}).then(function(token) {document.getElementById('model1_vote').value = token; document.getElementById('voted').submit();});">
+                    Vote for Model 1
+                </button>
+            </div>
+            <div class="column-vote">
+                <button onclick="grecaptcha.execute('YOUR_RECAPTCHA_SITE_KEY', {action: 'model2_vote'}).then(function(token) {document.getElementById('model2_vote').value = token; document.getElementById('voted').submit();});">
+                    Vote for Model 2
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="page-sidebar">
+        <h1> Leaderboard </h1>
+        <nav class="leaderboard">
+            <a class="leaderboard-row btn-normal" href="https://chat.openai.com/" onclick="return(false)">
+                <div class="leaderboard-name">1. ChatGPT</div>
+                <div class="leaderboard-score">40 pts.</div>
+            </a>
+            <a class="leaderboard-row btn-normal" href="https://chat.openai.com/" onclick="return(false)">
+                <div class="leaderboard-name">2. PaLM</div>
+                <div class="leaderboard-score">37 pts.</div>
+            </a>
+            <a class="leaderboard-row btn-normal" href="https://chat.openai.com/" onclick="return(false)">
+                <div class="leaderboard-name">3. BaRT</div>
+                <div class="leaderboard-score">26 pts.</div>
+            </a>
+            <a class="leaderboard-row btn-normal" href="https://chat.openai.com/" onclick="return(false)">
+                <div class="leaderboard-name">4. LLaMA</div>
+                <div class="leaderboard-score">23 pts.</div>
+            </a>
+            <a class="leaderboard-row btn-normal" href="https://chat.openai.com/" onclick="return(false)">
+                <div class="leaderboard-name">5. ChatGPT</div>
+                <div class="leaderboard-score">20 pts.</div>
+            </a>
+        </nav>
+
+        <div id="adngin-desktop_sidebar-0" style="margin:0 auto 20px auto;"></div>
+        <div id="adngin-desktop_sidebar2-0" style="margin:0 auto 20px auto;"></div>
+    </div>
+</div>
+
+<div class="page-menu">
+    <a href="/rules" rel="nofollow">How to Play?</a>
+</div>
+<form method="POST" action="#" id="voted">
+    <input type="hidden" name="model1_vote" id="model1_vote">
+    <input type="hidden" name="model2_vote" id="model2_vote">
+</form>
+
+</body>
+</html>
